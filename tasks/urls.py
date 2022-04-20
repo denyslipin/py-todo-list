@@ -3,7 +3,7 @@ from django.urls import path
 from tasks.views import (
     TaskListView, TaskCreateView, TaskUpdateView, TaskDeleteView,
     TagListView, TagCreateView, TagUpdateView, TagDeleteView,
-    TaskComplete
+    change_completed_status
 )
 
 urlpatterns = [
@@ -21,7 +21,7 @@ urlpatterns = [
     ),
     path(
         "task/<int:pk>/complete/",
-        TaskComplete.as_view(),
+        change_completed_status,
         name="task-complete"
     ),
     path("tags/", TagListView.as_view(), name="tag-list"),

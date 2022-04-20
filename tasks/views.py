@@ -1,8 +1,9 @@
 from django.urls import reverse_lazy
 from django.views import generic
+from django.shortcuts import redirect
 
 from tasks.models import Task, Tag
-from tasks.forms import TaskCompleteForm, TaskForm
+from tasks.forms import TaskForm
 
 
 class TaskListView(generic.ListView):
@@ -29,16 +30,8 @@ class TaskDeleteView(generic.DeleteView):
     template_name = "tasks/task_confirm_delete.html"
 
 
-class TaskComplete(generic.UpdateView):
-    model = Task
-    form_class = TaskCompleteForm
-    success_url = reverse_lazy("tasks:task-list")
-
-
 class TagListView(generic.ListView):
     model = Tag
-    context_object_name = "tag_list"
-    template_name = "tasks/tag_list.html"
 
 
 class TagCreateView(generic.CreateView):
@@ -59,3 +52,10 @@ class TagDeleteView(generic.DeleteView):
     model = Tag
     success_url = reverse_lazy("tasks:tag-list")
     template_name = "tasks/tag_confirm_delete.html"
+
+
+def change_completed_status(request, pk):
+    task = Task.objects.get(id=pk)
+    task.completed = not task.completed
+    task.save()
+    return redirect("tasks:task-list")
